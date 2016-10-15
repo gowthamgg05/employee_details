@@ -1,0 +1,36 @@
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<body>
+    <button type="button" onclick="loadData()">Load Spreadsheet Data</button>
+    <div id="display"></div>
+</body>
+<script>
+    function loadData() {
+      var rowObject ,titleArr = [],colCount = 0,row = 0, col = 0,
+          url = "https://spreadsheets.google.com/feeds/cells/1BUkU5tDaCgJX54m-O4IEB6jHikOAdmW_DY4r4mduzmM/od6/public/values?alt=json-in-script&callback=?";
+        $.getJSON(url, {}, function (d) {
+            var spreadsheetData = d.feed.entry;
+            console.log(spreadsheetData);
+            for(rowObject of spreadsheetData ){
+                if(rowObject .gs$cell.row  == "1"){
+                    colCount++;
+                    titleArr.push(rowObject.content.$t.trim().split(" " ).join("_").toLowerCase());
+                }else{
+                    break;
+                }
+            }
+            rowCount = (spreadsheetData.length /colCount )-1;
+            for(row = 2;row <= rowCount+1;row++){
+                var tempObj = {}
+                for(col in titleArr){
+                    tempObj[titleArr[col]] = spreadsheetData[(parseInt(row)-1)*8+(parseInt(col))].content.$t;
+                }
+                console.log(tempObj);
+            } 
+        });
+    }
+//    for()
+</script>
+
+</html>
